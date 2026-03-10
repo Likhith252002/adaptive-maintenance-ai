@@ -1,3 +1,3 @@
-from .drift_detector import DriftDetector
+from drift.drift_detector import DriftDetector
 
 __all__ = ["DriftDetector"]

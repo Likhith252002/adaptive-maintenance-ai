@@ -1,4 +1,4 @@
-from .lstm_model import LSTMModel
-from .anomaly_detector import AnomalyDetector
+from models.lstm_model import LSTMModel
+from models.anomaly_detector import AnomalyDetector
 
 __all__ = ["LSTMModel", "AnomalyDetector"]

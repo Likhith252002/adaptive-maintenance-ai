@@ -81,13 +81,13 @@ async def trigger_retrain(request: Request, body: RetrainRequest):
 # ── WebSocket ──────────────────────────────────────────────────────────────
 
 @router.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket, request: Request):
+async def websocket_endpoint(websocket: WebSocket):
     """
     Persistent WebSocket connection.
     Clients receive real-time JSON messages:
       { "type": "metrics" | "alert" | "drift", "data": {...} }
     """
-    ws_manager = getattr(request.app.state, "ws_manager", None)
+    ws_manager = getattr(websocket.app.state, "ws_manager", None)
     if ws_manager is None:
         await websocket.close(code=1011)
         return

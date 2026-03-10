@@ -11,9 +11,9 @@ from typing import Any, Dict, TypedDict
 
 from langgraph.graph import StateGraph, END
 
-from .monitor_agent    import MonitorAgent, SensorReading
-from .retraining_agent import RetrainingAgent
-from .alert_agent      import AlertAgent
+from agents.monitor_agent    import MonitorAgent, SensorReading
+from agents.retraining_agent import RetrainingAgent
+from agents.alert_agent      import AlertAgent
 
 logger = logging.getLogger(__name__)
 

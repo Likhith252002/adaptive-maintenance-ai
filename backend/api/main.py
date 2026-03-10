@@ -15,13 +15,13 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routes import router
-from .websocket_manager import WebSocketManager
-from ..agents import AlertAgent, MonitorAgent, Orchestrator, RetrainingAgent
-from ..data.stream_simulator import StreamSimulator
-from ..models import AnomalyDetector, LSTMModel
-from ..drift.drift_detector import DriftDetector
-from ..data.data_loader import FEATURE_COLS
+from api.routes import router
+from api.websocket_manager import WebSocketManager
+from agents import AlertAgent, MonitorAgent, Orchestrator, RetrainingAgent
+from data.stream_simulator import StreamSimulator
+from models import AnomalyDetector, LSTMModel
+from drift.drift_detector import DriftDetector
+from data.data_loader import FEATURE_COLS
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s — %(message)s")
@@ -86,7 +86,7 @@ async def lifespan(app: FastAPI):
 
 async def _run_stream(simulator: StreamSimulator) -> None:
     """Background task: feed each sensor tick through the Orchestrator."""
-    from ..agents.monitor_agent import SensorReading
+    from agents.monitor_agent import SensorReading
     from datetime import datetime
 
     async for raw in simulator.stream():
