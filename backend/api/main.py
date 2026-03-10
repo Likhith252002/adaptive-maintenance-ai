@@ -63,8 +63,10 @@ async def lifespan(app: FastAPI):
     # 5. Orchestrator
     orchestrator = Orchestrator(monitor, alerter, retrainer)
 
-    # 6. Background stream task
-    simulator = StreamSimulator(interval_sec=1.0, n_sensors=3, inject_faults=True)
+    # 6. Background stream task — load real NASA CMAPSS test data
+    from data.data_loader import DataLoader
+    _, test_df = DataLoader(data_dir="data/raw").load("FD001")
+    simulator = StreamSimulator(test_df=test_df, interval_sec=1.0)
     _stream_task = asyncio.create_task(_run_stream(simulator))
     logger.info("Sensor stream task started.")
 
@@ -93,9 +95,9 @@ async def _run_stream(simulator: StreamSimulator) -> None:
         try:
             reading = SensorReading(
                 timestamp = datetime.fromisoformat(raw["timestamp"]),
-                sensor_id = raw["sensor_id"],
-                values    = raw["values"],
-                source    = raw["source"],
+                sensor_id = f"engine_{raw['engine_id']:03d}",
+                values    = raw["sensors"],
+                source    = "cmapss",
             )
             state = {"latest_reading": reading}
             result = await orchestrator.run(state)
