@@ -18,6 +18,7 @@ router = APIRouter()
 # ── Health ─────────────────────────────────────────────────────────────────
 
 @router.get("/health", tags=["system"])
+@router.get("/api/health", tags=["system"])
 async def health_check():
     return {"status": "ok", "service": "adaptive-maintenance-ai"}
 
