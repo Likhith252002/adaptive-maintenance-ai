@@ -1,0 +1,65 @@
+# ── Python ────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+*.so
+.venv/
+venv/
+env/
+ENV/
+.python-version
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ── PyTorch / ML ──────────────────────────────────────────────────────────
+*.pt
+*.pth
+*.pkl
+*.h5
+*.ckpt
+*.safetensors
+wandb/
+mlruns/
+.mlflow/
+
+# ── Node / Frontend ───────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── Environment ───────────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.secret
+
+# ── Data ──────────────────────────────────────────────────────────────────
+data/raw/*.txt
+data/raw/*.csv
+data/models/
+
+# ── IDE / OS ──────────────────────────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+desktop.ini
+
+# ── Docker ────────────────────────────────────────────────────────────────
+.dockerignore
+
+# ── Notebooks ─────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
