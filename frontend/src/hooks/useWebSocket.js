@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
-const WS_URL = import.meta.env.VITE_WS_URL ?? "ws://localhost:8000/ws";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+const WS_URL  = import.meta.env.VITE_WS_URL  ?? `${API_URL.replace(/^http/, "ws")}/ws`;
 
 const STATUS = { CONNECTING: "connecting", OPEN: "open", CLOSED: "closed", ERROR: "error" };
 
