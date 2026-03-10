@@ -26,9 +26,11 @@ A production-grade, real-time predictive maintenance platform powered by a **Lan
 
 ### Drift Indicator
 ![Drift Indicator](docs/screenshots/drift_indicator.png)
-> Per-sensor drift status bars. Turns red when Page-Hinkley detects a distributional shift.
+> Per-sensor drift status bars updated by Page-Hinkley online test + Evidently batch reports.
 
-> **Add screenshots:** run the app locally, take screenshots of each panel, and save them to `docs/screenshots/`.
+### Agent Activity Log
+![Agent Activity Log](docs/screenshots/agent_log.png)
+> Timestamped event log from all LangGraph agents — monitor, alert, and retraining events.
 
 ---
 
