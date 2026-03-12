@@ -43,29 +43,44 @@ async def lifespan(app: FastAPI):
     # 1. Shared infrastructure
     ws_manager = WebSocketManager()
 
-    # 2. ML models
+    # 2. Load dataset (needed for anomaly detector training)
+    from data.data_loader import DataLoader
+    from pathlib import Path
+    loader   = DataLoader(data_dir="data/raw")
+    train_df, test_df = loader.load("FD001")
+
+    # 3. ML models
     lstm    = LSTMModel(input_size=len(FEATURE_COLS), seq_len=30)
     anomaly = AnomalyDetector(contamination=0.05)
     drift   = DriftDetector(feature_names=FEATURE_COLS)
 
-    # 3. LLM (optional — requires ANTHROPIC_API_KEY)
+    # Fit anomaly detector on training data (or load cached model)
+    anomaly_model_path = "data/raw/anomaly_detector.pkl"
+    if Path(anomaly_model_path).exists():
+        anomaly.load(anomaly_model_path)
+        logger.info("AnomalyDetector loaded from cache.")
+    else:
+        X_train = train_df[FEATURE_COLS].values
+        anomaly.fit(X_train)
+        anomaly.save(anomaly_model_path)
+        logger.info("AnomalyDetector fitted on %d training samples and saved.", len(X_train))
+
+    # 4. LLM (optional — requires ANTHROPIC_API_KEY)
     llm = None
     if os.getenv("ANTHROPIC_API_KEY"):
         from langchain_anthropic import ChatAnthropic
         llm = ChatAnthropic(model="claude-sonnet-4-6", temperature=0.3)
         logger.info("LLM loaded: Claude claude-sonnet-4-6")
 
-    # 4. Agents
+    # 5. Agents
     monitor   = MonitorAgent(lstm_model=lstm, anomaly_detector=anomaly, drift_detector=drift)
     alerter   = AlertAgent(websocket_manager=ws_manager, llm=llm)
     retrainer = RetrainingAgent(lstm_model=lstm)
 
-    # 5. Orchestrator
+    # 6. Orchestrator
     orchestrator = Orchestrator(monitor, alerter, retrainer)
 
-    # 6. Background stream task — load real NASA CMAPSS test data
-    from data.data_loader import DataLoader
-    _, test_df = DataLoader(data_dir="data/raw").load("FD001")
+    # 7. Background stream task — replay real NASA CMAPSS test data
     simulator = StreamSimulator(test_df=test_df, interval_sec=1.0)
     _stream_task = asyncio.create_task(_run_stream(simulator))
     logger.info("Sensor stream task started.")
